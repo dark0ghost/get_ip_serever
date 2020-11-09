@@ -2,13 +2,22 @@ use crate::modules::settings::Settings;
 use tokio::net::TcpListener;
 use tokio::prelude::*;
 use crate::modules::handler::Handler;
+use serde::{
+    Serialize,
+    Deserialize
+};
+
+
 
 mod modules;
 
+
+
+
 #[tokio::main]
 async fn main()  -> Result<(), Box<dyn std::error::Error>>{
-    let settings: Settings = Settings::new(false,"".to_string());
-    let handler: Handler = Handler::new();
+    let settings = Settings::new("src/doc/server.json".parse().unwrap()).await?;
+    let _handler: Handler = Handler::new();
     let  listener = TcpListener::bind(settings.make_ip()).await?;
     loop {
         let (mut socket, _) = listener.accept().await?;
