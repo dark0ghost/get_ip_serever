@@ -7,7 +7,7 @@ mod modules;
 
 #[tokio::main]
 async fn main()  -> Result<(), Box<dyn std::error::Error>>{
-    let settings: Settings = Settings::new(false,"".to_string());
+    let settings: Settings = Settings::new("".to_string());
     let handler: Handler = Handler::new();
     let  listener = TcpListener::bind(settings.make_ip()).await?;
     loop {

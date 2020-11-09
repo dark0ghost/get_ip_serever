@@ -14,8 +14,14 @@ pub(crate) struct Settings{
 }
 
 impl Settings{
-    pub async fn new(use_file: bool, path_to_file: String) -> Settings {
-        if !use_file {
+    pub fn init(ip: String, port: i8) -> Settings {
+        Self {
+            ip,
+            port
+        }
+
+    }
+    pub async fn new(path_to_file: String) -> Result<Settings, Box<dyn std::error::Error>> {
             let mut buffer:Vec<String> = vec![];
             tokio::fs::File::open(path_to_file).await?.read_buf(&mut buffer);
             let mut data: String = "".to_string();
@@ -23,19 +29,10 @@ impl Settings{
                 data+= &*i;
             }
 
-            Settings{
-               ip: "".parse().unwrap(),
-               port: 1,
-            }
-
-        }else{
-
-
-            Self {
-                ip: (*"".to_string()).parse().unwrap(),
-                port: 80
-            }
-        }
+            Ok(Settings{
+                ip: "".parse().unwrap(),
+                port: 1,
+            })
     }
     pub fn make_ip(&self) -> String {
         format!("{}:{}",self.ip,self.port)
