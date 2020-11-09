@@ -1,20 +1,36 @@
-use std::error::Error;
-use mio::Events;
-use std::net::TcpListener;
+use crate::modules::settings::Settings;
+use tokio::net::TcpListener;
+use tokio::prelude::*;
+use crate::modules::handler::Handler;
 
+mod modules;
 
-mod handler;
-mod settings;
-use settings::Settings;
-use handler::Handler;
+#[tokio::main]
+async fn main()  -> Result<(), Box<dyn std::error::Error>>{
+    let settings: Settings = Settings::new(false,"".to_string());
+    let handler: Handler = Handler::new();
+    let  listener = TcpListener::bind(settings.make_ip()).await?;
+    loop {
+        let (mut socket, _) = listener.accept().await?;
+        tokio::spawn(async move {
+            let mut buf = [0; 1024];
 
+            loop {
+                let n = match socket.read(&mut buf).await {
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let mut poll = Poll::new()?;
-    let mut events = Events::with_capacity(128);
-    const SETTINGS: Settings = Settings::new();
-    const HANDLER: Handler = Handler;
-    let mut server = TcpListener::bind(SETTINGS)?;
+                    Ok(n) if n == 0 => return,
+                    Ok(n) => n,
+                    Err(e) => {
+                        eprintln!("failed to read from socket; err = {:?}", e);
+                        return;
+                    }
+                };
 
-
+                if let Err(e) = socket.write_all(&buf[0..n]).await {
+                    eprintln!("failed to write to socket; err = {:?}", e);
+                    return;
+                }
+            }
+        });
+    }
 }
