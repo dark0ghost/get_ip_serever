@@ -5,31 +5,23 @@ use serde::{
     Deserialize
 };
 use self::tokio::prelude::io::AsyncReadExt;
-use std::str::from_utf8;
-use serde_json::{from_str};
+use crate::modules::traits::{Transform, Ser};
+use serde_json::from_str;
 
 
-
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Settings{
+#[derive(Serialize, Deserialize)]
+pub struct Settings {
     ip: String,
     port: i32
 }
 
-impl Settings{
-    #[warn(dead_code)]
-    pub fn init(ip: String, port: i32) -> Settings {
-        Self {
-                ip,
-                port
-        }
-    }
+impl<'a>  Settings {
+
     pub async fn new(path_to_file: String) -> Result<Self, Box<dyn std::error::Error>> {
             let mut buffer: Vec<u8> = vec![];
             let _buf = tokio::fs::File::open(path_to_file).await?.read_buf(&mut buffer).await?;
-            let  data: &str =  from_utf8(&buffer)?;
-            let s: Settings   = from_str(&data)?;
+            let  data =  buffer.translate();
+            let s: Settings =  from_str::<Settings>(&*data).unwrap();
             Ok(s)
     }
     pub fn make_ip(&self) -> String {
@@ -38,7 +30,7 @@ impl Settings{
 
 }
 
-impl fmt::Display for Settings {
+impl fmt::Display for Settings{
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f,"{}:{}",self.ip,self.port)
     }
