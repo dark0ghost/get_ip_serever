@@ -5,17 +5,17 @@ use serde::{Deserialize, Serialize};
 
 
 impl Transform for Vec<u8> {
-    fn translate(&self) -> String {
-        from_utf8(&self).unwrap().to_string()
+    fn translate(&self) -> &str {
+        from_utf8(&self).unwrap()
     }
 }
 
-impl Ser for String{
-    fn make<'a ,T>(&self) ->  T
+impl<'a>Ser<'a> for &'a str{
+    fn make<T>(&self) ->  T
     where
         T: Deserialize<'a>,
         T: Serialize
     {
-        from_str(&self).unwrap()
+        from_str(self).unwrap()
     }
 }

@@ -11,7 +11,7 @@ use serde_json::from_str;
 
 #[derive(Serialize, Deserialize)]
 pub struct Settings {
-    ip: String,
+    ip:  String,
     port: i32
 }
 
@@ -21,7 +21,7 @@ impl<'a>  Settings {
             let mut buffer: Vec<u8> = vec![];
             let _buf = tokio::fs::File::open(path_to_file).await?.read_buf(&mut buffer).await?;
             let  data =  buffer.translate();
-            let s: Settings =  from_str::<Settings>(&*data).unwrap();
+            let s: Settings =  data.make::<Settings>();
             Ok(s)
     }
     pub fn make_ip(&self) -> String {

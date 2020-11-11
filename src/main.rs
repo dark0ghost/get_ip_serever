@@ -23,8 +23,7 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>>{
             async move {
             let mut buf: Vec<u8> = vec![];
             loop {
-                let n = match socket.read(&mut buf).await {
-
+                let _n = match socket.read(&mut buf).await {
                     Ok(n) if n == 0 => return,
                     Ok(n) => n,
                     Err(e) => {
