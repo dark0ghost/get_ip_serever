@@ -6,7 +6,7 @@ use serde::{
 };
 use self::tokio::prelude::io::AsyncReadExt;
 use crate::modules::traits::{Transform, Ser};
-
+use std::error::Error;
 
 
 #[derive(Serialize, Deserialize)]
@@ -17,12 +17,11 @@ pub struct Settings {
 
 impl<'a>  Settings {
 
-    pub async fn new(path_to_file: String) -> Result<Self, Box<dyn std::error::Error>> {
+    pub async fn new(path_to_file: String) -> Result<Self, Box<dyn Error>>{
             let mut buffer: Vec<u8> = vec![];
             let _buf = tokio::fs::File::open(path_to_file).await?.read_buf(&mut buffer).await?;
             let  data =  buffer.translate();
-            let s: Settings =  data.make::<Settings>();
-            Ok(s)
+            Ok(data.make::<Settings>())
     }
     pub fn make_ip(&self) -> String {
         format!("{}:{}",self.ip,self.port)
