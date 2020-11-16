@@ -1,3 +1,4 @@
+use crate::modules::traits::Route;
 
 
 pub(crate) struct Handler;
@@ -8,5 +9,9 @@ impl Handler{
 
         }
     }
+
+}
+
+impl Route for Handler {
 
 }

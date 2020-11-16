@@ -10,3 +10,7 @@ pub(crate) trait Ser<'a>{
             T: Deserialize<'a>,
             T: Serialize;
 }
+
+pub(crate) trait Route{
+
+}
