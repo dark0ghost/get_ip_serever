@@ -5,7 +5,8 @@ use tokio::net::TcpListener;
 use std::error::Error;
 use crate::modules::traits::Transform;
 use tokio::prelude::io::{AsyncWriteExt, AsyncReadExt};
-
+use crate::modules::http::Http;
+use std::borrow::Borrow;
 
 
 mod modules;
@@ -16,6 +17,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let settings: Settings = Settings::new("src/doc/server.json".to_string()).await?;
     let handler: Handler = Handler::new();
     let link = settings.make_ip();
+    let http: Http  = Http::new();
     println!("start at http://{}",link);
     let server = Server::new(link,handler);
     loop {
@@ -24,7 +26,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
         tokio::spawn(
             async move {
                 let mut buff: Vec<u8> = vec![];
+                let http = Http::new();
                 loop {
+                    //get ip address
+                    println!("{}",socket.peer_addr().unwrap());
                     let n = match socket.read(&mut buff).await {
                         Ok(n) if n == 0 => return,
                         Ok(n) => n,
@@ -33,7 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                             return;
                         }
                     };
-                    if let Err(e) = socket.write_all(&buff[0..n]).await {
+                    if let Err(e) = socket.write_all(&*http.send_head_response(http.send_body_response("".to_string()))).await {
                         eprintln!("failed to write to socket; err = {:?}", e);
                         return;
                     }

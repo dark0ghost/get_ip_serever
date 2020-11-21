@@ -4,3 +4,4 @@ pub(crate)mod http;
 pub(crate)mod traits;
 pub(crate)mod implements;
 pub(crate)mod server;
+pub(crate)mod data;
