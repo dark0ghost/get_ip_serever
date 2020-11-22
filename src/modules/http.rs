@@ -24,11 +24,6 @@ impl Http{
         ",body.len()).into_bytes()
     }
 
-    pub fn send_body_response(&self, body: String)->String{
-        "<title>Test C++ HTTP Server</title>\
-        <h1>Test page</h1>
-        ".to_string()
-    }
 
     pub fn send_error(){
 

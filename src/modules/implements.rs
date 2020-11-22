@@ -4,6 +4,7 @@ use serde_json::from_str;
 use serde::{Deserialize, Serialize};
 
 
+
 impl Transform for Vec<u8> {
     fn translate(&self) -> &str {
         from_utf8(&self).unwrap()
@@ -19,3 +20,4 @@ impl<'a>Ser<'a> for &'a str{
         from_str(self).unwrap()
     }
 }
+
