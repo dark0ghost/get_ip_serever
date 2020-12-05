@@ -24,7 +24,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         let (mut socket, _) = listener.accept().await?;
         tokio::spawn(
             async move {
-                let mut buff: Vec<u8> = vec![];
+                let mut buff = [0; 2048];
                 let http = Http::new();
                 loop {
                     let n = match socket.read(&mut buff).await {
@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                             return;
                         }
                     };
-                    //println!("{}",buff.translate());
+
                     let response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n".to_string());
                     println!("{}",response.to_vec().translate());
                     if let Err(e) = socket.write_all(response).await {
