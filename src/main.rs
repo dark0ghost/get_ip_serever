@@ -6,7 +6,7 @@ use std::error::Error;
 use crate::modules::traits::Transform;
 use tokio::prelude::io::{AsyncWriteExt, AsyncReadExt};
 use crate::modules::http::Http;
-use std::borrow::Borrow;
+
 
 
 mod modules;
@@ -17,7 +17,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let settings: Settings = Settings::new("src/doc/server.json".to_string()).await?;
     let handler: Handler = Handler::new();
     let link = settings.make_ip();
-    let http: Http  = Http::new();
     println!("start at http://{}",link);
     let server = Server::new(link,handler);
     loop {
@@ -25,20 +24,24 @@ async fn main() -> Result<(), Box<dyn Error>> {
         let (mut socket, _) = listener.accept().await?;
         tokio::spawn(
             async move {
-                let mut buff: Vec<u8> = vec![];
+                let mut buff = [0; 2048];
                 let http = Http::new();
                 loop {
-                    //get ip address
-                    println!("{}",socket.peer_addr().unwrap());
                     let n = match socket.read(&mut buff).await {
-                        Ok(n) if n == 0 => return,
+                        Ok(n) if n == 0 => {
+                            println!("error: {}",n);
+                            return
+                        },
                         Ok(n) => n,
                         Err(e) => {
                             eprintln!("failed to read from socket; err = {:?}", e);
                             return;
                         }
                     };
-                    if let Err(e) = socket.write_all(&*http.send_head_response(http.send_body_response("".to_string()))).await {
+
+                    let response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n".to_string());
+                    println!("{}",response.to_vec().translate());
+                    if let Err(e) = socket.write_all(response).await {
                         eprintln!("failed to write to socket; err = {:?}", e);
                         return;
                     }
