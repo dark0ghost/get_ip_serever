@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             async move {
                 let mut buff = [0; 2048];
                 let http = Http::new();
-                loop {
+               // loop {
                     let n = match socket.read(&mut buff).await {
                         Ok(n) if n == 0 => {
                             println!("error: {}",n);
@@ -39,13 +39,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         }
                     };
                     http.parse_request(buff);
-                    let mut response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n".to_string());
+                    let mut response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n\n".to_string());
                     println!("{}",response.to_vec().translate());
                     if let Err(e) = socket.write_all(response).await {
                         eprintln!("failed to write to socket; err = {:?}", e);
                         return;
                     }
-                }
+
+            //    }
             }
         );
     }

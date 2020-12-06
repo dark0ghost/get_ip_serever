@@ -1,8 +1,11 @@
-use crate::modules::traits::{Transform, Ser};
-use std::str::from_utf8;
+use crate::modules::traits::{Transform, Ser, Print};
+use std::str::{from_utf8, SplitWhitespace};
 use serde_json::from_str;
 use serde::{Deserialize, Serialize};
-
+use serde::export::fmt::Display;
+use serde::export::Formatter;
+use std::fmt;
+use serde::de::Unexpected::Str;
 
 
 impl Transform for Vec<u8> {
@@ -18,6 +21,25 @@ impl<'a>Ser<'a> for &'a str{
         T: Serialize
     {
         from_str(self).unwrap()
+    }
+}
+
+
+
+impl Print for Vec<&str> {
+
+    fn print(&self) {
+        let mut str: String = String::new();
+        for i in self{
+           str+= &*(i.trim().to_owned() + " ");
+        }
+       println!("{}",str)
+    }
+
+    fn println(&self) {
+       for i in self{
+           println!("{}",i.trim())
+       }
     }
 }
 
