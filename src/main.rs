@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let handler: Handler = Handler::new();
     let link = settings.make_ip();
     println!("start at http://{}",link);
-    let server = Server::new(link,handler);
+   // let server = Server::new(link,handler);
     loop {
         let listener: TcpListener = TcpListener::bind(settings.make_ip()).await?;
         let (mut socket, _) = listener.accept().await?;
@@ -38,8 +38,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
                             return;
                         }
                     };
-
-                    let response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n".to_string());
+                    http.parse_request(buff);
+                    let mut response = &*http.send_head_response("<title>Test C++ HTTP Server</title>\n".to_string());
                     println!("{}",response.to_vec().translate());
                     if let Err(e) = socket.write_all(response).await {
                         eprintln!("failed to write to socket; err = {:?}", e);
