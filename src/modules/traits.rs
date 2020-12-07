@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use serde::export::fmt::Display;
 
 pub(crate) trait Transform{
     fn translate(&self) -> &str;
@@ -13,11 +12,12 @@ pub(crate) trait Ser<'a>{
 }
 
 pub(crate) trait Route{
+fn add_route<T>(&self,route: Vec<T>);
 
 }
 
 pub(crate) trait Print{
-    fn print(&self);
-    fn println(&self);
+    fn print(&self) -> &Self;
+    fn println(&self) -> &Self;
 }
 
