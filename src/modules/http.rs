@@ -27,12 +27,8 @@ impl Http{
 
     pub fn send_head_response(&self, body: String) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\n
-        Version: HTTP/1.1\r\n
-        Content-Type: text/html; charset=utf-8\r\n
-        Content-Length:{}
-        \r\n\r\n\
         {}
-        ",body.len(),body).into_bytes()
+        ",body).into_bytes()
     }
 
 

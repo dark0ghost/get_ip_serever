@@ -14,11 +14,10 @@ mod modules;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let settings: Settings = Settings::new("src/doc/server.json".to_string()).await?;
+    let settings: Settings = Settings::new("src/config/server.json".to_string()).await?;
     let handler: Handler = Handler::new();
     let link = settings.make_ip();
     println!("start at http://{}",link);
-   // let server = Server::new(link,handler);
     loop {
         let listener: TcpListener = TcpListener::bind(settings.make_ip()).await?;
         let (mut socket, _) = listener.accept().await?;
@@ -26,7 +25,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
             async move {
                 let mut buff = [0; 2048];
                 let http = Http::new();
-               // loop {
                     let n = match socket.read(&mut buff).await {
                         Ok(n) if n == 0 => {
                             println!("error: {}",n);
@@ -45,8 +43,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         eprintln!("failed to write to socket; err = {:?}", e);
                         return;
                     }
-
-            //    }
             }
         );
     }
