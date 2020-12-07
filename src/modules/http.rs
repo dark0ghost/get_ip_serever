@@ -1,4 +1,3 @@
-use crate::modules::data::Request;
 use std::str::from_utf8;
 use std::error::Error;
 use crate::modules::traits::Print;
@@ -20,24 +19,19 @@ impl Http{
         }
          Ok(())
     }
-
+    #[warn(dead_code)]
     pub fn handle_request(){
 
     }
 
-    pub fn send_head_response(&self, body: String) -> Vec<u8> {
+    pub fn send_response(&self, body: String) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\n
-        Version: HTTP/1.1\r\n
-        Content-Type: text/html; charset=utf-8\r\n
-        Content-Length:{}
-        \r\n\r\n\
         {}
-        ",body.len(),body).into_bytes()
+        ",body).into_bytes()
     }
 
-
-    pub fn send_error(){
-
+    pub fn send_error(code: i8) -> Vec<u8> {
+        format!("HTTP/1.1 {} OK\r\n",code).into_bytes()
     }
 
 }
