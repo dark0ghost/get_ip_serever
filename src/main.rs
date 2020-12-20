@@ -10,6 +10,19 @@ use crate::modules::http::Http;
 
 mod modules;
 
+#[cfg(test)]
+mod test{
+    use crate::modules::traits::Transform;
+
+    #[test]
+    fn test_translate(){
+        let test_vu: Vec<u8> = vec![69];
+        assert_eq!(test_vu.translate(), "E")
+    }
+
+
+}
+
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
