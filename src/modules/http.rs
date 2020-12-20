@@ -13,7 +13,7 @@ impl Http{
     pub fn parse_request(&mut self, request: [u8;2048],ip: String) -> Request {
         let mut data_parse: Vec<Vec<&str>> = vec![];
         for i in  from_utf8(&request){
-            let mut data: Vec<&str> = i.split_whitespace().collect();
+            let data: Vec<&str> = i.split_whitespace().collect();
             data.println();
             data_parse.push(data);
         }
@@ -35,7 +35,7 @@ impl Http{
         {}
         ",body).into_bytes()
     }
-
+    #[warn(dead_code)]
     pub fn send_error(code: i8) -> Vec<u8> {
         format!("HTTP/1.1 {} OK\r\n",code).into_bytes()
     }
