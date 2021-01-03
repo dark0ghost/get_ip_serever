@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
                         }
                     };
                     let response_parse = http.parse_request(buff, socket.peer_addr().ok().unwrap().to_string());
-                    let  response = &*http.send_response(format!("<title>Test C++ HTTP Server</title>\n\n<h1> u ip is {}<h1>",response_parse.ip).to_string());
+                    let  response = &*http.send_response(format!("<title>Test Rust HTTP Server</title>\n\n<h1> u ip is {}<h1>",response_parse.ip).to_string());
                     println!("{}",response.to_vec().translate());
                     if let Err(e) = socket.write_all(response).await {
                         eprintln!("failed to write to socket; err = {:?}", e);
