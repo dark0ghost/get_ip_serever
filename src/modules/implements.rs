@@ -44,7 +44,7 @@ impl Print for Vec<&str> {
 
 
 impl Route for Handler {
-    fn add_route<T>(&self, route: Vec<T>) {
+    fn add_route<T>(&self, _route: Vec<T>) {
         unimplemented!()
     }
 }
