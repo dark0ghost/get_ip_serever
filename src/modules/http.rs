@@ -36,8 +36,6 @@ impl Http{
         ",body).into_bytes()
     }
 
-    /*pub fn send_error(code: i8) -> Vec<u8> {
-        format!("HTTP/1.1 {} OK\r\n",code).into_bytes()
-    }*/
+
 
 }
