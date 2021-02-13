@@ -1,8 +1,7 @@
-use crate::modules::traits::{Transform, Ser, Print, Route};
+use crate::modules::traits::{Transform, Ser, Print};
 use std::str::{from_utf8};
 use serde_json::from_str;
 use serde::{Deserialize, Serialize};
-use crate::modules::handler::Handler;
 
 
 impl Transform for Vec<u8> {
@@ -30,7 +29,7 @@ impl Print for Vec<&str> {
         for i in self{
            str+= &*(i.trim().to_owned() + " ");
         }
-       println!("{}",str);
+
         &self
     }
 
@@ -42,9 +41,3 @@ impl Print for Vec<&str> {
     }
 }
 
-
-impl Route for Handler {
-    fn add_route<T>(&self, _route: Vec<T>) {
-        unimplemented!()
-    }
-}

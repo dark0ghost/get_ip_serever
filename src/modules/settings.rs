@@ -23,6 +23,7 @@ impl<'a>  Settings {
             let  data =  buffer.translate();
             Ok(data.make::<Settings>())
     }
+
     pub fn make_ip(&self) -> String {
         format!("{}:{}",self.ip,self.port)
     }
