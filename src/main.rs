@@ -1,12 +1,9 @@
 use crate::modules::settings::Settings;
-use crate::modules::handler::Handler;
 use tokio::net::TcpListener;
 use std::error::Error;
 use crate::modules::traits::Transform;
 use tokio::prelude::io::{AsyncWriteExt, AsyncReadExt};
 use crate::modules::http::Http;
-
-
 
 mod modules;
 
@@ -14,7 +11,6 @@ mod modules;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let settings: Settings = Settings::new("src/config/server.json".to_string()).await?;
-    let _handler: Handler = Handler::new();
     let link: String = settings.make_ip();
     println!("start at http://{}",link);
     loop {
